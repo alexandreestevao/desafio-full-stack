@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +24,12 @@ public class Empresa implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String nomeFantasia;
 	private String cnpj;
 	private String cep;
 	
+	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "tb_empresa_fornecedor", 
 	joinColumns = @JoinColumn(name = "empresa_id"),
@@ -34,9 +39,9 @@ public class Empresa implements Serializable {
 	public Empresa() {		
 	}
 
-	public Empresa(Long id, String cnpj, String cep) {
-		super();
+	public Empresa(Long id, String nomeFantasia, String cnpj, String cep) {
 		this.id = id;
+		this.nomeFantasia = nomeFantasia;
 		this.cnpj = cnpj;
 		this.cep = cep;
 	}
@@ -47,6 +52,14 @@ public class Empresa implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}	
+
+	public String getNomeFantasia() {
+		return nomeFantasia;
+	}
+
+	public void setNomeFantasia(String nomeFantasia) {
+		this.nomeFantasia = nomeFantasia;
 	}
 
 	public String getCnpj() {
@@ -88,7 +101,8 @@ public class Empresa implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Empresa [id=" + id + ", cnpj=" + cnpj + ", cep=" + cep + "]";
+		return "Empresa [id=" + id + ", nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + ", cep=" + cep
+				+ ", fornecedores=" + fornecedores + "]";
 	}
 
 }

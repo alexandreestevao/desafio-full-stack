@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,8 +30,9 @@ public class Fornecedor implements Serializable {
 	private String email;
 	private String cep;
 	private Instant data;
+
 	
-	@ManyToMany(mappedBy = "fornecedores")
+	@ManyToMany(mappedBy = "fornecedores", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Empresa> empresas = new HashSet<>();
 	
 	public Fornecedor() {
@@ -38,7 +41,6 @@ public class Fornecedor implements Serializable {
 
 	public Fornecedor(Long id, String cpfCnpj, String rg, Integer dataNascimento, String nome, String email, String cep,
 			Instant data) {
-		super();
 		this.id = id;
 		this.cpfCnpj = cpfCnpj;
 		this.rg = rg;
