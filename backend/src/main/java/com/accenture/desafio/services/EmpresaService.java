@@ -23,5 +23,9 @@ public class EmpresaService {
 		Optional<Empresa> obj = repository.findById(id);
 		return obj.get();
 	}
+	
+	public Empresa insert(Empresa obj) {
+		return repository.save(obj);
+	}
 
 }
