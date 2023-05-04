@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.accenture.desafio.entities.Empresa;
 import com.accenture.desafio.repositories.EmpresaRepository;
+import com.accenture.desafio.services.exceptions.DatabaseException;
 import com.accenture.desafio.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -39,24 +40,25 @@ public class EmpresaService {
 		}
 		try {
 			repository.deleteById(id);	
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(id);
-		}
-		
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}		
 	}
 	
 	public Empresa update(Long id, Empresa obj) {
-		Optional<Empresa> entity = repository.findById(id);
-		if(!entity.isPresent()) {
+		try {
+			Optional<Empresa> entity = repository.findById(id);
+			Empresa objEmpresa = entity.get();
+			objEmpresa.setId(id);
+			objEmpresa.setNomeFantasia(obj.getNomeFantasia());
+			objEmpresa.setCnpj(obj.getCnpj());
+			objEmpresa.setCep(obj.getCep());
+			objEmpresa.setMoment(Instant.now());
+			return repository.save(objEmpresa);
+		} catch (RuntimeException e) {
 			throw new ResourceNotFoundException(id);
-		}		
-		Empresa objEmpresa = entity.get();
-		objEmpresa.setId(id);
-		objEmpresa.setNomeFantasia(obj.getNomeFantasia());
-		objEmpresa.setCnpj(obj.getCnpj());
-		objEmpresa.setCep(obj.getCep());
-		objEmpresa.setMoment(Instant.now());
-		return repository.save(objEmpresa);
+		}
+
 	}
 
 }

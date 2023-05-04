@@ -46,20 +46,22 @@ public class FornecedorService {
 	}
 	
 	public Fornecedor update(Long id, Fornecedor obj) {
-		Optional<Fornecedor> entity = repository.findById(id);
-		if(!entity.isPresent()) {
+		try {
+			Optional<Fornecedor> entity = repository.findById(id);
+			Fornecedor objFornecedor = entity.get();
+			objFornecedor.setId(id);
+			objFornecedor.setCpfCnpj(obj.getCpfCnpj());
+			objFornecedor.setRg(obj.getRg());
+			objFornecedor.setDataNascimento(obj.getDataNascimento());
+			objFornecedor.setNome(obj.getNome());
+			objFornecedor.setEmail(obj.getEmail());
+			objFornecedor.setCep(obj.getCep());
+			objFornecedor.setMoment(Instant.now());
+			return repository.save(objFornecedor);
+		} catch (RuntimeException e) {
 			throw new ResourceNotFoundException(id);
-		}		
-		Fornecedor objFornecedor = entity.get();
-		objFornecedor.setId(id);
-		objFornecedor.setCpfCnpj(obj.getCpfCnpj());
-		objFornecedor.setRg(obj.getRg());
-		objFornecedor.setDataNascimento(obj.getDataNascimento());
-		objFornecedor.setNome(obj.getNome());
-		objFornecedor.setEmail(obj.getEmail());
-		objFornecedor.setCep(obj.getCep());
-		objFornecedor.setMoment(Instant.now());
-		return repository.save(objFornecedor);
+		}
+
 	}
 
 }
