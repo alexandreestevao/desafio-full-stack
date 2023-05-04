@@ -21,7 +21,7 @@ public class Fornecedor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String cpfCnpj;
 	private String rg;
@@ -41,7 +41,8 @@ public class Fornecedor implements Serializable {
 	}
 
 	public Fornecedor(Long id, String cpfCnpj, String rg, Integer dataNascimento, String nome, String email, String cep,
-			Instant moment) {
+			Instant moment, List<Empresa> empresas) {
+		super();
 		this.id = id;
 		this.cpfCnpj = cpfCnpj;
 		this.rg = rg;
@@ -50,7 +51,11 @@ public class Fornecedor implements Serializable {
 		this.email = email;
 		this.cep = cep;
 		this.moment = moment;
+		this.empresas = empresas;
 	}
+
+
+
 
 	public Long getId() {
 		return id;

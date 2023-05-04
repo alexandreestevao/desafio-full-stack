@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.accenture.desafio.entities.Empresa;
@@ -32,14 +33,22 @@ public class EmpresaService {
 	}
 	
 	public void delete(Long id) {
-		repository.deleteById(id);
+		Optional<Empresa> entity = repository.findById(id);
+		if(!entity.isPresent()) {
+			throw new ResourceNotFoundException(id);
+		}
+		try {
+			repository.deleteById(id);	
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		
 	}
 	
 	public Empresa update(Long id, Empresa obj) {
 		Optional<Empresa> entity = repository.findById(id);
 		if(!entity.isPresent()) {
-			System.out.println("Empresa de ID "+id+" não encontrada!");
-			return null;
+			throw new ResourceNotFoundException(id);
 		}		
 		Empresa objEmpresa = entity.get();
 		objEmpresa.setId(id);

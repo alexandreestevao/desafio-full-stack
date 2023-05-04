@@ -23,7 +23,7 @@ public class Empresa implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nomeFantasia;
 	private String cnpj;
@@ -42,11 +42,15 @@ public class Empresa implements Serializable {
 	public Empresa() {		
 	}
 
-	public Empresa(Long id, String nomeFantasia, String cnpj, String cep) {
+	public Empresa(Long id, String nomeFantasia, String cnpj, String cep, Instant moment,
+			List<Fornecedor> fornecedores) {
+		super();
 		this.id = id;
 		this.nomeFantasia = nomeFantasia;
 		this.cnpj = cnpj;
 		this.cep = cep;
+		this.moment = moment;
+		this.fornecedores = fornecedores;
 	}
 
 	public Long getId() {

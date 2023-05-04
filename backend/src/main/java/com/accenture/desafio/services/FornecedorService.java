@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.accenture.desafio.entities.Fornecedor;
 import com.accenture.desafio.repositories.FornecedorRepository;
+import com.accenture.desafio.services.exceptions.DatabaseException;
+import com.accenture.desafio.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class FornecedorService {
@@ -22,7 +25,7 @@ public class FornecedorService {
 	
 	public Fornecedor findById(Long id) {
 		Optional<Fornecedor> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public Fornecedor insert(Fornecedor obj) {
@@ -31,14 +34,21 @@ public class FornecedorService {
 	}
 	
 	public void delete(Long id) {
-		repository.deleteById(id);
+		Optional<Fornecedor> entity = repository.findById(id);
+		if(!entity.isPresent()) {
+			throw new ResourceNotFoundException(id);
+		}	
+		try {
+			repository.deleteById(id);	
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	
 	public Fornecedor update(Long id, Fornecedor obj) {
 		Optional<Fornecedor> entity = repository.findById(id);
 		if(!entity.isPresent()) {
-			System.out.println("Fornecedor de ID "+id+" não encontrado!");
-			return null;
+			throw new ResourceNotFoundException(id);
 		}		
 		Fornecedor objFornecedor = entity.get();
 		objFornecedor.setId(id);
