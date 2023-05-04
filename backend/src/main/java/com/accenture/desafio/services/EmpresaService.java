@@ -1,5 +1,6 @@
 package com.accenture.desafio.services;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.accenture.desafio.entities.Empresa;
 import com.accenture.desafio.repositories.EmpresaRepository;
+import com.accenture.desafio.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class EmpresaService {
@@ -21,10 +23,11 @@ public class EmpresaService {
 	
 	public Empresa findById(Long id) {
 		Optional<Empresa> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public Empresa insert(Empresa obj) {
+		obj.setMoment(Instant.now());
 		return repository.save(obj);
 	}
 	
@@ -43,6 +46,7 @@ public class EmpresaService {
 		objEmpresa.setNomeFantasia(obj.getNomeFantasia());
 		objEmpresa.setCnpj(obj.getCnpj());
 		objEmpresa.setCep(obj.getCep());
+		objEmpresa.setMoment(Instant.now());
 		return repository.save(objEmpresa);
 	}
 

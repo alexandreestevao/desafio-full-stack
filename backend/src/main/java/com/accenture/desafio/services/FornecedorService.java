@@ -1,5 +1,6 @@
 package com.accenture.desafio.services;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class FornecedorService {
 	}
 	
 	public Fornecedor insert(Fornecedor obj) {
+		obj.setMoment(Instant.now());
 		return repository.save(obj);
 	}
 	
@@ -46,7 +48,7 @@ public class FornecedorService {
 		objFornecedor.setNome(obj.getNome());
 		objFornecedor.setEmail(obj.getEmail());
 		objFornecedor.setCep(obj.getCep());
-		objFornecedor.setData(obj.getData());
+		objFornecedor.setMoment(Instant.now());
 		return repository.save(objFornecedor);
 	}
 

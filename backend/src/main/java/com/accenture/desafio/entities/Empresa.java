@@ -1,9 +1,11 @@
 package com.accenture.desafio.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -26,6 +28,9 @@ public class Empresa implements Serializable {
 	private String nomeFantasia;
 	private String cnpj;
 	private String cep;	
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+	private Instant moment;
 	
 	@JsonIgnore
 	@ManyToMany
@@ -75,6 +80,14 @@ public class Empresa implements Serializable {
 	public void setCep(String cep) {
 		this.cep = cep;
 	}	
+
+	public Instant getMoment() {
+		return moment;
+	}
+
+	public void setMoment(Instant moment) {
+		this.moment = moment;
+	}
 
 	public List<Fornecedor> getFornecedores() {
 		return fornecedores;

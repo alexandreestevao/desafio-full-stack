@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +29,9 @@ public class Fornecedor implements Serializable {
 	private String nome;
 	private String email;
 	private String cep;
-	private Instant data;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+	private Instant moment;
 	
 	@ManyToMany(mappedBy = "fornecedores", fetch = FetchType.EAGER)
 	private List<Empresa> empresas;
@@ -37,7 +41,7 @@ public class Fornecedor implements Serializable {
 	}
 
 	public Fornecedor(Long id, String cpfCnpj, String rg, Integer dataNascimento, String nome, String email, String cep,
-			Instant data) {
+			Instant moment) {
 		this.id = id;
 		this.cpfCnpj = cpfCnpj;
 		this.rg = rg;
@@ -45,7 +49,7 @@ public class Fornecedor implements Serializable {
 		this.nome = nome;
 		this.email = email;
 		this.cep = cep;
-		this.data = data;
+		this.moment = moment;
 	}
 
 	public Long getId() {
@@ -104,12 +108,12 @@ public class Fornecedor implements Serializable {
 		this.cep = cep;
 	}
 
-	public Instant getData() {
-		return data;
+	public Instant getMoment() {
+		return moment;
 	}
 
-	public void setData(Instant data) {
-		this.data = data;
+	public void setMoment(Instant moment) {
+		this.moment = moment;
 	}
 
 	public List<Empresa> getEmpresas() {
