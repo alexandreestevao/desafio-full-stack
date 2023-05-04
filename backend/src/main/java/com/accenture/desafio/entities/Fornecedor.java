@@ -2,11 +2,9 @@ package com.accenture.desafio.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +19,7 @@ public class Fornecedor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String cpfCnpj;
 	private String rg;
@@ -30,10 +28,9 @@ public class Fornecedor implements Serializable {
 	private String email;
 	private String cep;
 	private Instant data;
-
 	
-	@ManyToMany(mappedBy = "fornecedores", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<Empresa> empresas = new HashSet<>();
+	@ManyToMany(mappedBy = "fornecedores", fetch = FetchType.EAGER)
+	private List<Empresa> empresas;
 	
 	public Fornecedor() {
 		
@@ -114,9 +111,13 @@ public class Fornecedor implements Serializable {
 	public void setData(Instant data) {
 		this.data = data;
 	}
-	
-	public Set<Empresa> getEmpresas() {
+
+	public List<Empresa> getEmpresas() {
 		return empresas;
+	}
+
+	public void setEmpresas(List<Empresa> empresas) {
+		this.empresas = empresas;
 	}
 
 	@Override
@@ -136,10 +137,5 @@ public class Fornecedor implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	@Override
-	public String toString() {
-		return "Fornecedor [id=" + id + ", cpfCnpj=" + cpfCnpj + ", rg=" + rg + ", dataNascimento=" + dataNascimento
-				+ ", nome=" + nome + ", email=" + email + ", cep=" + cep + ", data=" + data + "]";
-	}
 
 }

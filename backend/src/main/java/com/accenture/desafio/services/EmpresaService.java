@@ -31,5 +31,19 @@ public class EmpresaService {
 	public void delete(Long id) {
 		repository.deleteById(id);
 	}
+	
+	public Empresa update(Long id, Empresa obj) {
+		Optional<Empresa> entity = repository.findById(id);
+		if(!entity.isPresent()) {
+			System.out.println("Empresa de ID "+id+" não encontrada!");
+			return null;
+		}		
+		Empresa objEmpresa = entity.get();
+		objEmpresa.setId(id);
+		objEmpresa.setNomeFantasia(obj.getNomeFantasia());
+		objEmpresa.setCnpj(obj.getCnpj());
+		objEmpresa.setCep(obj.getCep());
+		return repository.save(objEmpresa);
+	}
 
 }

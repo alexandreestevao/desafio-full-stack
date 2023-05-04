@@ -1,9 +1,8 @@
 package com.accenture.desafio.entities;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,19 +21,18 @@ public class Empresa implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String nomeFantasia;
 	private String cnpj;
-	private String cep;
-	
+	private String cep;	
 	
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "tb_empresa_fornecedor", 
 	joinColumns = @JoinColumn(name = "empresa_id"),
 	inverseJoinColumns = @JoinColumn(name = "fornecedor_id"))
-	private Set<Fornecedor> fornecedores = new HashSet<>();
+	private List<Fornecedor> fornecedores;
 	
 	public Empresa() {		
 	}
@@ -76,10 +74,14 @@ public class Empresa implements Serializable {
 
 	public void setCep(String cep) {
 		this.cep = cep;
-	}
-	
-	public Set<Fornecedor> getFornecedores() {
+	}	
+
+	public List<Fornecedor> getFornecedores() {
 		return fornecedores;
+	}
+
+	public void setFornecedores(List<Fornecedor> fornecedores) {
+		this.fornecedores = fornecedores;
 	}
 
 	@Override
@@ -97,12 +99,6 @@ public class Empresa implements Serializable {
 			return false;
 		Empresa other = (Empresa) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "Empresa [id=" + id + ", nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + ", cep=" + cep
-				+ ", fornecedores=" + fornecedores + "]";
 	}
 
 }
