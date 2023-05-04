@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -55,6 +56,13 @@ public class FornecedorController {
 	public ResponseEntity<Fornecedor> update(@PathVariable Long id, @RequestBody Fornecedor obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
-	}	
-
+	}
+	
+	@GetMapping(value = "/search")
+	public ResponseEntity<List<Fornecedor>> findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(@RequestHeader(value = "nome", defaultValue = "") String nome, 
+			@RequestHeader(value = "cpfcnpj", defaultValue = "") String cpfcnpj) {					
+		List<Fornecedor> list = service.findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(nome, cpfcnpj);
+		return ResponseEntity.ok().body(list);
+	}
+	
 }
