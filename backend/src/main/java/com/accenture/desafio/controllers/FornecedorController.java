@@ -3,6 +3,8 @@ package com.accenture.desafio.controllers;
 import java.net.URI;
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -40,10 +41,16 @@ public class FornecedorController {
 	
 	@PostMapping
 	public ResponseEntity<Fornecedor> insert(@RequestBody Fornecedor obj) {
-		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+		Fornecedor fornecedor = service.findByCpfCnpjIgnoreCase(obj.getCpfCnpj());
+		
+		if(fornecedor==null) {
+			obj = service.insert(obj);
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+					.buildAndExpand(obj.getId()).toUri();
+			return ResponseEntity.created(uri).body(obj);
+		} else {
+			return ResponseEntity.ok().body(obj);
+		}		
 	}
 	
 	@DeleteMapping(value = "/{id}")
@@ -59,9 +66,10 @@ public class FornecedorController {
 	}
 	
 	@GetMapping(value = "/search")
-	public ResponseEntity<List<Fornecedor>> findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(@RequestHeader(value = "nome", defaultValue = "") String nome, 
-			@RequestHeader(value = "cpfcnpj", defaultValue = "") String cpfcnpj) {					
-		List<Fornecedor> list = service.findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(nome, cpfcnpj);
+	public ResponseEntity<List<Fornecedor>> findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(
+			@PathParam(value = "nome") String nome, 
+			@PathParam(value = "cpfCnpj") String cpfCnpj) {					
+		List<Fornecedor> list = service.findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(nome, cpfCnpj);
 		return ResponseEntity.ok().body(list);
 	}
 	

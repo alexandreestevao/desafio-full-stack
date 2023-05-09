@@ -64,9 +64,14 @@ public class FornecedorService {
 
 	}
 
-	public List<Fornecedor> findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(String nome, String cpfcnpj) {
-		List<Fornecedor> result = repository.findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(nome, cpfcnpj);
+	public List<Fornecedor> findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(String nome, String cpfCnpj) {
+		List<Fornecedor> result = repository.findByNomeIgnoreCaseOrCpfCnpjIgnoreCase(nome, cpfCnpj);
 		return result;
+	}
+	
+	public Fornecedor findByCpfCnpjIgnoreCase(String cpfCnpj) {
+		Fornecedor fornecedor = repository.findByCpfCnpjIgnoreCase(cpfCnpj);
+		return fornecedor;
 	}
 
 }
